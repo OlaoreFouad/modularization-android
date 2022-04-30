@@ -3,6 +3,8 @@ package dev.olaore.hero_interactors.usecases
 import dev.olaore.core.domain.DataState
 import dev.olaore.core.domain.ProgressBarState
 import dev.olaore.core.domain.UIComponent
+import dev.olaore.core.util.Logger
+import dev.olaore.hero_datasource.cache.HeroCache
 import dev.olaore.hero_datasource.network.HeroService
 import dev.olaore.hero_domain.Hero
 import kotlinx.coroutines.flow.Flow
@@ -10,15 +12,15 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.delay
 
 class GetHerosUseCase(
-    private val service: HeroService
+    private val service: HeroService,
+    private val cache: HeroCache,
+    private val logger: Logger
 ) {
 
     fun execute(): Flow<DataState<List<Hero>>> = flow {
 
         try {
             emit(DataState.Loading(ProgressBarState.Loading))
-
-            delay(1000)
 
             val heros: List<Hero> = try {
                 service.getHeros()
@@ -34,7 +36,15 @@ class GetHerosUseCase(
                 )
                 listOf()
             }
-            emit(DataState.Data(heros))
+
+            logger.log("MainActivity: Size of all items from network: ${ heros.size }")
+
+            cache.insert(heros)
+            val cachedHeros = cache.selectAll()
+            logger.log("MainActivity: Size of all items from cache: ${ cachedHeros.size }")
+
+
+            emit(DataState.Data(cachedHeros))
         } catch (ex: Throwable) {
             ex.printStackTrace()
             emit(

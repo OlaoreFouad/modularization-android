@@ -14,6 +14,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.squareup.sqldelight.android.AndroidSqliteDriver
 import dev.olaore.core.domain.DataState.*
 import dev.olaore.core.domain.ProgressBarState
 import dev.olaore.core.domain.UIComponent
@@ -35,13 +36,19 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val heroInteractors = HeroInteractors.build()
+        val heroInteractors = HeroInteractors.build(
+            sqlDriver = AndroidSqliteDriver(
+                schema = HeroInteractors.schema,
+                name = HeroInteractors.dbName,
+                context = this,
+            )
+        )
         val logger = Logger("MainActivity")
         heroInteractors.getHeros.execute().onEach {
             when (it) {
                 is Response -> {
                     if (it.uiComponent is UIComponent.Dialog) {
-                        logger.log((it.uiComponent as UIComponent.Dialog).title)
+                        logger.log((it.uiComponent as UIComponent.Dialog).description)
                     } else {
                         logger.log((it.uiComponent as UIComponent.None).message)
                     }
