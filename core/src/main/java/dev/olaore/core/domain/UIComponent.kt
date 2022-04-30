@@ -7,6 +7,8 @@ sealed class UIComponent {
         val description: String
     ): UIComponent()
 
-    object None: UIComponent()
+    data class None(
+        val message: String = ""
+    ): UIComponent()
 
 }

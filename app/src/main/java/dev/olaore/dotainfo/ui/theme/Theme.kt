@@ -1,4 +1,4 @@
-package com.codingwithmitch.dotainfo.ui.theme
+package dev.olaore.dotainfo.ui.theme
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.isSystemInDarkTheme

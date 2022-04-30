@@ -1,6 +1,6 @@
 package dev.olaore.core.domain
 
-sealed class DataState<T> {
+sealed class DataState<out T> {
     data class Response(
         val uiComponent: UIComponent
     ): DataState<Nothing>()

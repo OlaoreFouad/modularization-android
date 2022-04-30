@@ -1,4 +1,4 @@
-package com.codingwithmitch.dotainfo.ui.theme
+package dev.olaore.dotainfo.ui.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.graphics.Color
