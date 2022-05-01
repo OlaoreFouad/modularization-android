@@ -22,6 +22,8 @@ import dev.olaore.core.util.Logger
 import dev.olaore.dotainfo.ui.theme.DotaInfoTheme
 import dev.olaore.hero_domain.Hero
 import dev.olaore.hero_interactors.interactors.HeroInteractors
+import dev.olaore.ui_herolist.HeroListScreen
+import dev.olaore.ui_herolist.state.HeroListState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.launchIn
@@ -29,10 +31,7 @@ import kotlinx.coroutines.flow.onEach
 
 class MainActivity : ComponentActivity() {
 
-    private val heros = mutableStateOf<List<Hero>>(listOf())
-    private val progressBarState = mutableStateOf<ProgressBarState>(
-        ProgressBarState.Idle
-    )
+    private val state = mutableStateOf(HeroListState())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,33 +53,19 @@ class MainActivity : ComponentActivity() {
                     }
                 }
                 is Data -> {
-                    heros.value = it.data ?: listOf()
+                    state.value = state.value.copy(heros = it.data ?: listOf())
                 }
                 is Loading -> {
-                    progressBarState.value = it.state
+                    state.value = state.value.copy(
+                        progressBarState = ProgressBarState.Loading,
+                    )
                 }
             }
         }.launchIn(CoroutineScope(Dispatchers.IO))
 
         setContent {
             DotaInfoTheme {
-                Box(modifier = Modifier
-                    .fillMaxSize()
-                    .padding(20.dp)) {
-
-                    LazyColumn {
-                        items(heros.value) {
-                            Text(text = it.localizedName)
-                        }
-                    }
-
-                    if (progressBarState.value is ProgressBarState.Loading) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.align(Alignment.Center)
-                        )
-                    }
-
-                }
+                HeroListScreen(state = state.value)
             }
         }
     }
