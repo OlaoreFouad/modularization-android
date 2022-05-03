@@ -1,6 +1,9 @@
+
 plugins {
     id("com.android.application")
     kotlin("android")
+    kotlin("kapt")
+    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -61,5 +64,10 @@ dependencies{
 
     implementation(Google.material)
 
+    implementation(Hilt.android)
+    kapt(Hilt.compiler)
+
     implementation(SqlDelight.androidDriver)
+
+    implementation(Coil.coil)
 }

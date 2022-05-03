@@ -37,12 +37,8 @@ class GetHerosUseCase(
                 listOf()
             }
 
-            logger.log("MainActivity: Size of all items from network: ${ heros.size }")
-
             cache.insert(heros)
             val cachedHeros = cache.selectAll()
-            logger.log("MainActivity: Size of all items from cache: ${ cachedHeros.size }")
-
 
             emit(DataState.Data(cachedHeros))
         } catch (ex: Throwable) {

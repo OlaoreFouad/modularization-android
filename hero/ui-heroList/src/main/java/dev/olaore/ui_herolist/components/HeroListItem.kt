@@ -3,6 +3,7 @@ package dev.olaore.ui_herolist.components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,43 +21,59 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.ImageLoader
+import coil.annotation.ExperimentalCoilApi
+import coil.compose.rememberImagePainter
+import coil.request.ImageRequest
 import dev.olaore.hero_domain.Hero
 import dev.olaore.ui_herolist.R
 import kotlin.math.round
 
+@OptIn(ExperimentalCoilApi::class)
 @Composable
 fun HeroListItem(
     hero: Hero,
-    onHeroSelected: (Int) -> Unit
+    imageLoader: ImageLoader,
+    onHeroSelected: (Int) -> Unit,
 ) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 8.dp)
+            .padding(12.dp)
             .clickable { onHeroSelected.invoke(hero.id) }
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(150.dp)
+                .height(120.dp)
         ) {
+            val painter = rememberImagePainter(
+                hero.img,
+                imageLoader = imageLoader,
+                builder = {
+                    placeholder(
+                        if (isSystemInDarkTheme()) R.drawable.black_background else R.drawable.white_background
+                    )
+                }
+            )
             Image(
-                painter = painterResource(id = R.drawable.ic_launcher_background),
+                painter = painter,
                 contentDescription = hero.localizedName,
                 modifier = Modifier
                     .width(100.dp)
-                    .fillMaxHeight()
+                    .fillMaxHeight(),
+                contentScale = ContentScale.Crop
             )
             Spacer(modifier = Modifier.width(16.dp))
             Box(
                 modifier = Modifier
                     .fillMaxHeight()
                     .weight(1f)
-                    .background(Color.LightGray)
             ) {
                 Column(
                     modifier = Modifier.fillMaxHeight(),
@@ -77,8 +94,10 @@ fun HeroListItem(
             }
             Column(
                 modifier = Modifier
-                    .padding(end = 12.dp),
-                horizontalAlignment = Alignment.End
+                    .padding(end = 12.dp)
+                    .fillMaxHeight(),
+                horizontalAlignment = Alignment.End,
+                verticalArrangement = Arrangement.Center
             ) {
                 // Using remember in list item does not behave correctly?
 //                val proWR: Int = remember{round(hero.proWins.toDouble() / hero.proPick.toDouble() * 100).toInt()}
@@ -97,6 +116,4 @@ fun HeroListItem(
 @Preview
 @Composable
 fun PreviewHeroListItem() {
-    HeroListItem(Hero()) {
-    }
 }

@@ -6,23 +6,21 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import coil.ImageLoader
 import dev.olaore.core.domain.ProgressBarState
 import dev.olaore.ui_herolist.state.HeroListState
 
 @Composable
 fun HeroListScreen(
-    state: HeroListState
+    state: HeroListState,
+    imageLoader: ImageLoader
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
-        when (state.progressBarState) {
-            is ProgressBarState.Idle -> {
-                HeroList(heros = state.heros)
-            }
-            is ProgressBarState.Loading -> {
-                CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center)
-                )
-            }
+        HeroList(heros = state.heros, imageLoader)
+        if (state.progressBarState is ProgressBarState.Loading) {
+            CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.Center)
+            )
         }
     }
 }
