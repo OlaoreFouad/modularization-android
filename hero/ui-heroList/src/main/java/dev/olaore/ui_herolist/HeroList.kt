@@ -11,11 +11,13 @@ import dev.olaore.ui_herolist.state.HeroListState
 @Composable
 fun HeroList(
     heros: List<Hero>,
-    imageLoader: ImageLoader
+    imageLoader: ImageLoader,
+    onItemClicked: (Int) -> Unit
 ) {
     LazyColumn {
         items(heros) {
-            HeroListItem(hero = it, imageLoader = imageLoader) {
+            HeroListItem(hero = it, imageLoader = imageLoader) { heroId ->
+                onItemClicked.invoke(heroId)
             }
         }
     }

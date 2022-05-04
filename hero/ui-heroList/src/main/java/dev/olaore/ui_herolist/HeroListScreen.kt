@@ -13,10 +13,13 @@ import dev.olaore.ui_herolist.state.HeroListState
 @Composable
 fun HeroListScreen(
     state: HeroListState,
-    imageLoader: ImageLoader
+    imageLoader: ImageLoader,
+    onItemClicked: (Int) -> Unit
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
-        HeroList(heros = state.heros, imageLoader)
+        HeroList(heros = state.heros, imageLoader) { heroId ->
+            onItemClicked.invoke(heroId)
+        }
         if (state.progressBarState is ProgressBarState.Loading) {
             CircularProgressIndicator(
                 modifier = Modifier.align(Alignment.Center)

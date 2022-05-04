@@ -4,10 +4,12 @@ import com.squareup.sqldelight.db.SqlDriver
 import dev.olaore.core.util.Logger
 import dev.olaore.hero_datasource.cache.HeroCache
 import dev.olaore.hero_datasource.network.HeroService
+import dev.olaore.hero_interactors.usecases.GetHeroUseCase
 import dev.olaore.hero_interactors.usecases.GetHerosUseCase
 
 data class HeroInteractors(
-    val getHeros: GetHerosUseCase
+    val getHeros: GetHerosUseCase,
+    val getHero: GetHeroUseCase
 ) {
 
     companion object Factory {
@@ -22,6 +24,9 @@ data class HeroInteractors(
                     service = service,
                     cache = cache,
                     logger = Logger("MainActivity")
+                ),
+                getHero = GetHeroUseCase(
+                    cache
                 )
             )
         }
