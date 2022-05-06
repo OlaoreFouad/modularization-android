@@ -12,6 +12,7 @@ import dev.olaore.core.util.Logger
 import dev.olaore.dotainfo.state.HeroListEvents
 import dev.olaore.dotainfo.state.HeroListEvents.*
 import dev.olaore.hero_interactors.interactors.HeroInteractors
+import dev.olaore.hero_interactors.usecases.GetHerosUseCase
 import dev.olaore.ui_herolist.state.HeroListState
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -19,7 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HeroListViewModel @Inject constructor (
-    private val herosInteractors: HeroInteractors
+    private val getHeros: GetHerosUseCase
 ) : ViewModel() {
 
     private val logger = Logger("MainActivity")
@@ -36,7 +37,7 @@ class HeroListViewModel @Inject constructor (
     }
 
     private fun getHeros() {
-        herosInteractors.getHeros.execute().onEach {
+        getHeros.execute().onEach {
             when (it) {
                 is DataState.Response -> {
                     if (it.uiComponent is UIComponent.Dialog) {

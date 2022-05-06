@@ -9,30 +9,18 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import dev.olaore.hero_interactors.interactors.HeroInteractors
+import dev.olaore.hero_interactors.usecases.GetHerosUseCase
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object HeroListModule {
 
-    @Singleton
     @Provides
-    fun provideSqlDriver(
-        @ApplicationContext app: Context
-    ): SqlDriver {
-        return AndroidSqliteDriver(
-            schema = HeroInteractors.schema,
-            name = HeroInteractors.dbName,
-            context = app,
-        )
-    }
-
-    @Provides
-    @Singleton
-    fun provideHeroInteractors(
-        sqlDriver: SqlDriver
-    ): HeroInteractors {
-        return HeroInteractors.build(sqlDriver)
+    fun provideGetHeros(
+        heroInteractors: HeroInteractors
+    ): GetHerosUseCase {
+        return heroInteractors.getHeros
     }
 
 }

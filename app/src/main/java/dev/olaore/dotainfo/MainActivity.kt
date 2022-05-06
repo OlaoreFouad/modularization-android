@@ -14,7 +14,8 @@ import coil.ImageLoader
 import dagger.hilt.android.AndroidEntryPoint
 import dev.olaore.dotainfo.ui.navigation.Screen
 import dev.olaore.dotainfo.ui.theme.DotaInfoTheme
-import dev.olaore.ui_herodetail.HeroDetailScreen
+import dev.olaore.ui_herodetail.HeroDetailViewModel
+import dev.olaore.ui_herodetail.ui.HeroDetailScreen
 import dev.olaore.ui_herolist.HeroListScreen
 import javax.inject.Inject
 
@@ -35,7 +36,7 @@ class MainActivity : ComponentActivity() {
                     startDestination = Screen.HeroList.route
                 ) {
                     addHeroListToGraph(navController, imageLoader)
-                    addHeroDetailToGraph()
+                    addHeroDetailToGraph(imageLoader)
                 }
             }
         }
@@ -54,13 +55,14 @@ fun NavGraphBuilder.addHeroListToGraph(
     }
 }
 
-fun NavGraphBuilder.addHeroDetailToGraph() {
+fun NavGraphBuilder.addHeroDetailToGraph(
+    imageLoader: ImageLoader
+) {
     composable(
-        Screen.HeroDetail.route + "/{heroId}",
-        arguments = Screen.HeroDetail.arguments
-    ) { navBackStackEntry ->
-        val heroId = navBackStackEntry.arguments?.getInt("heroId") as Int
-        HeroDetailScreen(heroId)
+        Screen.HeroDetail.route + "/{heroId}"
+    ) {
+        val viewModel: HeroDetailViewModel = hiltViewModel()
+        HeroDetailScreen(viewModel.state.value, imageLoader)
     }
 }
 

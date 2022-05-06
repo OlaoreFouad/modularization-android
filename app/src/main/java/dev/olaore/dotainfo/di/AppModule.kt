@@ -30,4 +30,24 @@ class AppModule {
             .build()
     }
 
+    @Singleton
+    @Provides
+    fun provideSqlDriver(
+        @ApplicationContext app: Context
+    ): SqlDriver {
+        return AndroidSqliteDriver(
+            schema = HeroInteractors.schema,
+            name = HeroInteractors.dbName,
+            context = app,
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideHeroInteractors(
+        sqlDriver: SqlDriver
+    ): HeroInteractors {
+        return HeroInteractors.build(sqlDriver)
+    }
+
 }
