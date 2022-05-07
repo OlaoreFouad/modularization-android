@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -19,6 +20,7 @@ import dev.olaore.ui_herodetail.ui.HeroDetailScreen
 import dev.olaore.ui_herolist.HeroListScreen
 import javax.inject.Inject
 
+@ExperimentalComposeUiApi
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
@@ -43,13 +45,18 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@ExperimentalComposeUiApi
 fun NavGraphBuilder.addHeroListToGraph(
     navController: NavController,
     imageLoader: ImageLoader
 ) {
     composable(Screen.HeroList.route) {
         val viewModel: HeroListViewModel = hiltViewModel()
-        HeroListScreen(state = viewModel.state.value, imageLoader) { heroId ->
+        HeroListScreen(
+            state = viewModel.state.value,
+            imageLoader,
+            propagateEvent = viewModel::onTriggerEvent
+        ) { heroId ->
             navController.navigate(Screen.HeroDetail.route + "/$heroId")
         }
     }
