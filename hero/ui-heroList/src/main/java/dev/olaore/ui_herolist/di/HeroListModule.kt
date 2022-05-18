@@ -9,6 +9,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import dev.olaore.hero_interactors.interactors.HeroInteractors
+import dev.olaore.hero_interactors.usecases.FilterHerosUseCase
 import dev.olaore.hero_interactors.usecases.GetHerosUseCase
 import javax.inject.Singleton
 
@@ -21,6 +22,13 @@ object HeroListModule {
         heroInteractors: HeroInteractors
     ): GetHerosUseCase {
         return heroInteractors.getHeros
+    }
+
+    @Provides
+    fun provideFilterHeros(
+        heroInteractors: HeroInteractors
+    ): FilterHerosUseCase {
+        return heroInteractors.filterHeros
     }
 
 }

@@ -9,6 +9,8 @@ import dev.olaore.core.domain.DataState
 import dev.olaore.core.domain.ProgressBarState
 import dev.olaore.core.domain.UIComponent
 import dev.olaore.core.util.Logger
+import dev.olaore.hero_domain.HeroFilter
+import dev.olaore.hero_interactors.usecases.FilterHerosUseCase
 import dev.olaore.ui_herolist.state.HeroListEvents
 import dev.olaore.ui_herolist.state.HeroListEvents.*
 import dev.olaore.hero_interactors.usecases.GetHerosUseCase
@@ -19,7 +21,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HeroListViewModel @Inject constructor(
-    private val getHeros: GetHerosUseCase
+    private val getHeros: GetHerosUseCase,
+    private val filterHeros: FilterHerosUseCase
 ) : ViewModel() {
 
     private val logger = Logger("MainActivity")
@@ -38,16 +41,31 @@ class HeroListViewModel @Inject constructor(
             is UpdateFilterQuery -> {
                 updateFilterQuery(event.query)
             }
+            is UpdateHeroFilter -> {
+                updateHeroFilter(event.heroFilter)
+            }
+            is UpdateFilterDialogState -> {
+                state.value = state.value.copy(
+                    filterDialogState = event.dialogState
+                )
+            }
         }
     }
 
+    private fun updateHeroFilter(heroFilter: HeroFilter) {
+        state.value = state.value.copy(
+            heroFilter = heroFilter
+        )
+        filterHeros()
+    }
+
     private fun filterHeros() {
-        val q = state.value.filterQuery
-        val filteredList = state.value.heros.filter {
-            it.localizedName.lowercase().contains(
-                q.lowercase()
-            )
-        }.toMutableList()
+        val filteredList = filterHeros.execute(
+            current = state.value.heros,
+            heroFilter = state.value.heroFilter,
+            attributeFilter = state.value.filterPrimaryAttribute,
+            heroName = state.value.filterQuery
+        ).toMutableList()
         state.value = state.value.copy(
             filteredList = filteredList
         )
