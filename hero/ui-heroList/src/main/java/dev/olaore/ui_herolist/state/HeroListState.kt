@@ -1,6 +1,8 @@
 package dev.olaore.ui_herolist.state
 
 import dev.olaore.core.domain.ProgressBarState
+import dev.olaore.core.domain.Queue
+import dev.olaore.core.domain.UIComponent
 import dev.olaore.core.domain.UIComponentState
 import dev.olaore.hero_domain.Hero
 import dev.olaore.hero_domain.HeroAttribute
@@ -13,5 +15,6 @@ data class HeroListState(
     val filteredList: MutableList<Hero> = mutableListOf(),
     val heroFilter: HeroFilter = HeroFilter.Hero(),
     val filterPrimaryAttribute: HeroAttribute = HeroAttribute.Unknown,
-    val filterDialogState: UIComponentState = UIComponentState.Hide
+    val filterDialogState: UIComponentState = UIComponentState.Hide,
+    val errorQueue: Queue<UIComponent> = Queue(mutableListOf())
 )

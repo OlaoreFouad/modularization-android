@@ -4,4 +4,6 @@ sealed class HeroDetailEvents {
     data class GetHero(
         val id: Int
     ): HeroDetailEvents()
+
+    object RemoveMessageFromQueue: HeroDetailEvents()
 }

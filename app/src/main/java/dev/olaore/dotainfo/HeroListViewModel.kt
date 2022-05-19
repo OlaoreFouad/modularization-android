@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.olaore.core.domain.DataState
 import dev.olaore.core.domain.ProgressBarState
+import dev.olaore.core.domain.Queue
 import dev.olaore.core.domain.UIComponent
 import dev.olaore.core.util.Logger
 import dev.olaore.hero_domain.HeroAttribute
@@ -26,7 +27,7 @@ class HeroListViewModel @Inject constructor(
     private val filterHeros: FilterHerosUseCase
 ) : ViewModel() {
 
-    private val logger = Logger("MainActivity")
+    private val logger = Logger("HeroListViewModel")
     val state: MutableState<HeroListState> = mutableStateOf(HeroListState())
 
     init {
@@ -52,6 +53,9 @@ class HeroListViewModel @Inject constructor(
             }
             is UpdateHeroAttributeFilter -> {
                 updateHeroAttributeFilter(event.attribute)
+            }
+            is RemoveMessageFromQueue -> {
+                removeTopMessage()
             }
         }
     }
@@ -95,7 +99,7 @@ class HeroListViewModel @Inject constructor(
             when (it) {
                 is DataState.Response -> {
                     if (it.uiComponent is UIComponent.Dialog) {
-                        logger.log((it.uiComponent as UIComponent.Dialog).description)
+                        dispatchMessage(it.uiComponent)
                     } else {
                         logger.log((it.uiComponent as UIComponent.None).message)
                     }
@@ -114,6 +118,27 @@ class HeroListViewModel @Inject constructor(
                 }
             }
         }.launchIn(viewModelScope)
+    }
+
+    private fun dispatchMessage(uiComponent: UIComponent) {
+        val queue = state.value.errorQueue
+        queue.add(uiComponent)
+        updateMessageQueue(queue)
+    }
+
+    private fun removeTopMessage() {
+        try {
+            val queue = state.value.errorQueue
+            queue.remove()
+            updateMessageQueue(queue)
+        } catch (ex: Exception) {
+            logger.log("dialogqueue is empty!!")
+        }
+    }
+
+    private fun updateMessageQueue(queue: Queue<UIComponent>) {
+        state.value = state.value.copy(errorQueue = Queue(mutableListOf()))
+        state.value = state.value.copy(errorQueue = queue)
     }
 
 }

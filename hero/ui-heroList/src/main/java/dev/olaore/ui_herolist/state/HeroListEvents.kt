@@ -24,4 +24,6 @@ sealed class HeroListEvents {
     data class UpdateHeroAttributeFilter(
         val attribute: HeroAttribute
     ): HeroListEvents()
+
+    object RemoveMessageFromQueue: HeroListEvents()
 }

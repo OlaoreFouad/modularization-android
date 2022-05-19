@@ -32,7 +32,11 @@ fun HeroListScreen(
     onItemClicked: (Int) -> Unit,
 ) {
     DefaultScreen(
-        progressBarState = state.progressBarState
+        progressBarState = state.progressBarState,
+        queue = state.errorQueue,
+        onRemoveHeadFromQueue = {
+            propagateEvent(RemoveMessageFromQueue)
+        }
     ) {
         Column {
             val name = remember {
