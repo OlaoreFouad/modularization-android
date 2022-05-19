@@ -6,6 +6,7 @@ dependencies {
     "implementation"(project(Modules.heroInteractors))
     "implementation"(project(Modules.core))
     "implementation"(project(Modules.heroDomain))
+    "implementation"(project(Modules.components))
 
     "implementation"(Hilt.android)
     "kapt"(Hilt.compiler)

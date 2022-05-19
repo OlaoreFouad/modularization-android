@@ -9,6 +9,7 @@ import dev.olaore.core.domain.DataState
 import dev.olaore.core.domain.ProgressBarState
 import dev.olaore.core.domain.UIComponent
 import dev.olaore.core.util.Logger
+import dev.olaore.hero_domain.HeroAttribute
 import dev.olaore.hero_domain.HeroFilter
 import dev.olaore.hero_interactors.usecases.FilterHerosUseCase
 import dev.olaore.ui_herolist.state.HeroListEvents
@@ -49,7 +50,19 @@ class HeroListViewModel @Inject constructor(
                     filterDialogState = event.dialogState
                 )
             }
+            is UpdateHeroAttributeFilter -> {
+                updateHeroAttributeFilter(event.attribute)
+            }
         }
+    }
+
+    private fun updateHeroAttributeFilter(
+        attributeFilter: HeroAttribute
+    ) {
+        state.value = state.value.copy(
+            filterPrimaryAttribute = attributeFilter
+        )
+        filterHeros()
     }
 
     private fun updateHeroFilter(heroFilter: HeroFilter) {

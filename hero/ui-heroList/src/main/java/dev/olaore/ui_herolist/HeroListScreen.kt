@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import coil.ImageLoader
+import dev.olaore.components.DefaultScreen
 import dev.olaore.core.domain.ProgressBarState
 import dev.olaore.core.domain.UIComponentState
 import dev.olaore.core.domain.UIComponentState.*
@@ -30,44 +31,47 @@ fun HeroListScreen(
     propagateEvent: (HeroListEvents) -> Unit,
     onItemClicked: (Int) -> Unit,
 ) {
-    Column {
-        val name = remember {
-            mutableStateOf("")
-        }
-        HeroListToolbar(
-            heroName = state.filterQuery,
-            onHeroNameChanged = {
-                propagateEvent(UpdateFilterQuery(it))
-            },
-            onExecuteSearch = {
-                propagateEvent(FilterHeros)
-            },
-            onShowFilterDialog = {
-                propagateEvent(UpdateFilterDialogState(Show))
+    DefaultScreen(
+        progressBarState = state.progressBarState
+    ) {
+        Column {
+            val name = remember {
+                mutableStateOf("")
             }
-        )
-        Box(modifier = Modifier.fillMaxSize()) {
-            HeroList(
-                heros = state.filteredList,
-                imageLoader
-            ) { heroId ->
-                onItemClicked.invoke(heroId)
-            }
-            if (state.filterDialogState is Show) {
-                HeroListFilter(
-                    heroFilter = state.heroFilter,
-                    onUpdateHeroFilter = { heroFilter ->
-                        propagateEvent(UpdateHeroFilter(heroFilter))
-                    },
-                    onCloseDialog = {
-                        propagateEvent(UpdateFilterDialogState(Hide))
-                    }
-                )
-            }
-            if (state.progressBarState is ProgressBarState.Loading) {
-                CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center)
-                )
+            HeroListToolbar(
+                heroName = state.filterQuery,
+                onHeroNameChanged = {
+                    propagateEvent(UpdateFilterQuery(it))
+                },
+                onExecuteSearch = {
+                    propagateEvent(FilterHeros)
+                },
+                onShowFilterDialog = {
+                    propagateEvent(UpdateFilterDialogState(Show))
+                }
+            )
+            Box(modifier = Modifier.fillMaxSize()) {
+                HeroList(
+                    heros = state.filteredList,
+                    imageLoader
+                ) { heroId ->
+                    onItemClicked.invoke(heroId)
+                }
+                if (state.filterDialogState is Show) {
+                    HeroListFilter(
+                        heroFilter = state.heroFilter,
+                        onUpdateHeroFilter = { heroFilter ->
+                            propagateEvent(UpdateHeroFilter(heroFilter))
+                        },
+                        attributeFilter = state.filterPrimaryAttribute,
+                        onUpdateAttributeFilter = {
+                            propagateEvent(UpdateHeroAttributeFilter(it))
+                        },
+                        onCloseDialog = {
+                            propagateEvent(UpdateFilterDialogState(Hide))
+                        }
+                    )
+                }
             }
         }
     }
