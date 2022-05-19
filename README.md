@@ -1,5 +1,6 @@
 # Work in progress
-Multi-module demo app that gets data from a Dota2 api.
+Multi-module demo app that gets data from a Dota2 api. (as used in the course taught by Mitch Tabian on codingwithmitch.com)
+Course Link: https://codingwithmitch.com/courses/modularizing-android-apps
 
 | Module name        | Type                 | Description                                                      |
 | -------------      | -------------        | -------------                                                    |
