@@ -42,7 +42,6 @@ class GetHerosUseCase(
 
             emit(DataState.Data(cachedHeros))
 
-            throw Exception("An error occurred!, What do you think happened? :(")
         } catch (ex: Throwable) {
             ex.printStackTrace()
             emit(

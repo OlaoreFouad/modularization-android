@@ -8,4 +8,7 @@ dependencies {
     "implementation"(project(Modules.core))
 
     "implementation"(Kotlinx.coroutinesCore)
+
+    "testImplementation"(project(Modules.heroDataSourceTest))
+    "testImplementation"(Junit.junit4)
 }
