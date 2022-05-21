@@ -16,7 +16,7 @@ android {
         targetSdk = Android.targetSdk
         versionCode = Android.versionCode
         versionName = Android.versionName
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "dev.olaore.dotainfo.CustomTestRunner"
     }
 
     buildTypes {
@@ -48,6 +48,7 @@ dependencies{
 
     implementation(project(Modules.core))
     implementation(project(Modules.heroDomain))
+    implementation(project(Modules.heroDataSource))
     implementation(project(Modules.heroInteractors))
     implementation(project(Modules.ui_heroList))
     implementation(project(Modules.ui_heroDetail))
@@ -73,4 +74,11 @@ dependencies{
     implementation(SqlDelight.androidDriver)
 
     implementation(Coil.coil)
+
+    androidTestImplementation(project(Modules.heroDataSourceTest))
+    androidTestImplementation(AndroidXTest.runner)
+    androidTestImplementation(ComposeTest.uiTestJunit4)
+    androidTestImplementation(HiltTest.hiltAndroidTesting)
+    kaptAndroidTest(Hilt.compiler)
+    androidTestImplementation(Junit.junit4)
 }
