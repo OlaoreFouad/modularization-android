@@ -12,4 +12,9 @@ dependencies {
     "kapt"(Hilt.compiler)
 
     "implementation"(Coil.coil)
+
+    "androidTestImplementation"(project(Modules.heroDataSourceTest))
+    "androidTestImplementation"(ComposeTest.uiTestJunit4)
+    "debugImplementation"(ComposeTest.uiTestManifest)
+    "androidTestImplementation"(Junit.junit4)
 }

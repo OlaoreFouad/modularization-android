@@ -14,4 +14,9 @@ dependencies {
 
     "implementation"(Hilt.android)
     "kapt"(Hilt.compiler)
+
+    "androidTestImplementation"(project(Modules.heroDataSourceTest))
+    "androidTestImplementation"(ComposeTest.uiTestJunit4)
+    "debugImplementation"(ComposeTest.uiTestManifest)
+    "androidTestImplementation"(Junit.junit4)
 }
